@@ -1,9 +1,14 @@
-import sys
 from PyQt5.QtWidgets import QApplication
-from src.configuration.configurator import configureUI, configureHotKeys
+from src.configuration.configurator import configureUI
+from src.listeners.exit_listener import ExitListener
+from src.listeners.text_listener import TextListener
 
 app = QApplication([])
 
-configureHotKeys(app)
+exitListener = ExitListener(app)
+textListener = TextListener()
 
-sys.exit(app.exec())
+window = configureUI(app, exitListener, textListener)
+window.show()
+
+sys.exit(app.exec_())

@@ -1,57 +1,33 @@
 import sys
-import keyboard
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QMainWindow, QGridLayout, QDesktopWidget, QLineEdit
 from src.ui.borderless_window import BorderlessWindow
+from src.ui.edit_widget import EditWidget
 
-def configureUI(app):
+def fun(state):
+    print(state)
+
+def configureUI(app, keypressListener, textListener):
     window = BorderlessWindow()
     window.center(800, 60)
 
-    editWidget = QLineEdit()
+    widget = EditWidget()
+    widget.configureFont("Cascadia Mono", 14)
+    widget.configureTextColor(204, 204, 204)
+    widget.configureStyles([
+        { "name": "background-color", "value": "rgb(12,12,12)" },
+        { "name": "padding-left", "value": "8px" },
+        { "name": "padding-right", "value": "8px" },
+        { "name": "border", "value": "0" }
+    ])
 
-    palette = QPalette()
-    palette.setColor(QPalette.Text, QColor(204, 204, 204))
-    editWidget.setPalette(palette)
+    _configureSubscriptions(widget, keypressListener, textListener)
 
-    font = QFont("Cascadia Mono", 14)
-    editWidget.setFont(font)
-
-    editWidget.setStyleSheet("""
-    background-color: rgb(12,12,12);
-    padding-left: 8px;
-    padding-right: 8px;
-    border: 0;
-    """)
-
-    window.setCentralWidget(editWidget)
+    window.setWidget(widget)
 
     return window
 
-def temp(app):
-    window = BorderlessWindow()
-    window.center(800, 60)
-
-    editWidget = QLineEdit()
-
-    palette = QPalette()
-    palette.setColor(QPalette.Text, QColor(204, 204, 204))
-    editWidget.setPalette(palette)
-
-    font = QFont("Cascadia Mono", 14)
-    editWidget.setFont(font)
-
-    editWidget.setStyleSheet("""
-    background-color: rgb(12,12,12);
-    padding-left: 8px;
-    padding-right: 8px;
-    border: 0;
-    """)
-
-    window.setCentralWidget(editWidget)
-
-    window.show()
-
-def configureHotKeys(app):
-    keyboard.add_hotkey('alt+x', lambda:temp(app))
+def _configureSubscriptions(widget, keypressListener, textListener):
+    keypressListener.subscribe(widget.keyPressObservable)
+    textListener.subscribe(widget.textChangeObservable)

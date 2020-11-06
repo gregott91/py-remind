@@ -29,7 +29,7 @@ class ReminderTimeTokenType:
             unit = self._match_unit(rawUnit)
             value = int(rawValue)
 
-            if (unit is not None):
+            if unit is not None:
                 start = 0
                 end =  (text.find(rawUnit, 0, len(text)) - 1) + len(rawUnit)
                 textPosition = TokenTextPosition(start, end)
