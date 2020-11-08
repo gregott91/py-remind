@@ -1,5 +1,5 @@
-from parsing.states.reminder_time_token_type import ReminderTimeTokenType
-from parsing.states.text_token_type import TextTokenType
+from src.parsing.states.reminder_time_token_type import ReminderTimeTokenType
+from src.parsing.states.text_token_type import TextTokenType
 
 def _crawl_states(text, nextStates):
     for state in nextStates:

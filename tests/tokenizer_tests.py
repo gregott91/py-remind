@@ -1,11 +1,11 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../src")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/..")
 
 import unittest
-from parsing.tokenizer import tokenize
-from parsing.token_type import TokenType
-from parsing.reminder_unit import ReminderUnit
+from src.parsing.tokenizer import tokenize
+from src.parsing.token_type import TokenType
+from src.parsing.reminder_unit import ReminderUnit
 
 class TokenizerTests(unittest.TestCase):
     def test_tokenize_recognizesReminder(self):

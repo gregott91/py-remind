@@ -1,8 +1,8 @@
-from parsing.states.text_token_type import TextTokenType
-from parsing.tokens.reminder_time_token import ReminderTimeToken
-from parsing.reminder_unit import ReminderUnit
-from parsing.token_text_position import TokenTextPosition
-from parsing.reminder_time import ReminderTime
+from src.parsing.states.text_token_type import TextTokenType
+from src.parsing.tokens.reminder_time_token import ReminderTimeToken
+from src.parsing.reminder_unit import ReminderUnit
+from src.parsing.token_text_position import TokenTextPosition
+from src.parsing.reminder_time import ReminderTime
 
 class ReminderTimeTokenType:
     @property
@@ -15,10 +15,17 @@ class ReminderTimeTokenType:
         # match conditions are:
         # if it starts with "in" or a number
         words = text.split()
+
+        if len(words) < 2:
+            return None
+
         rawValue = None
         rawUnit = None
 
         if words[0] == "in":
+            if len(words) < 3:
+                return None
+
             rawValue = words[1]
             rawUnit = words[2]
         else:

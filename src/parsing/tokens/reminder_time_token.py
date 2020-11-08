@@ -1,4 +1,4 @@
-from parsing.token_type import TokenType
+from src.parsing.token_type import TokenType
 
 class ReminderTimeToken:
     @property

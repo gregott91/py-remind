@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import QApplication
 from src.configuration.configurator import configureUI
 from src.listeners.exit_listener import ExitListener
