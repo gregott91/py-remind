@@ -30,4 +30,4 @@ def configureUI(app, keypressListener, textListener):
 
 def _configureSubscriptions(widget, keypressListener, textListener):
     keypressListener.subscribe(widget.keyPressObservable)
-    textListener.subscribe(widget.textChangeObservable)
+    textListener.subscribe(widget.textChangeObservable, widget.keyPressObservable)

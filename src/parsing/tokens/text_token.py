@@ -5,8 +5,9 @@ class TextToken:
     def tokenType(self):
         return TokenType.TEXT
     
-    def __init__(self, textPosition):
+    def __init__(self, textPosition, text):
         self.textPosition = textPosition
+        self.text = text
 
     def transformText(self):
         return None
