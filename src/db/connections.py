@@ -2,9 +2,14 @@ from sqlalchemy import create_engine
 from src.db.dtos import Base
 from sqlalchemy.orm import sessionmaker
 
+class DBOptions:
+    def __init__(self, dbFile, echo):
+        self.dbfile = dbFile
+        self.echo = echo
+
 class DBSession():
     def __init__(self, engine):
-        self.session = sessionmaker(bind=engine)
+        self.session = sessionmaker(bind=engine)()
 
     def commit(self):
         self.session.commit()
@@ -23,13 +28,13 @@ class DBSession():
         self.session.add(item)
 
 class DBManager():
-    def __init__(self, fileName):
+    def __init__(self, options):
         self.engine = None
-        self.dbfile = fileName
+        self.options = options
         self.initialized = False
         
     def initialize(self):
-        self.engine = create_engine(self.dbfile, echo=True)
+        self.engine = create_engine(self.options.dbfile, echo=self.options.echo)
         Base.metadata.create_all(self.engine)
         self.initialized = True
 

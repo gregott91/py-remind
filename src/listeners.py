@@ -1,7 +1,18 @@
 from src.parsing.tokenizer import tokenize
 from PyQt5.QtCore import Qt
-from src.parsing.token_type import TokenType
-from src.tasks.text_task import TextTask
+from src.parsing.tokens import TokenType
+from src.tasks import TextTask
+
+class ExitListener():
+    def __init__(self, app):
+        self.app = app
+    
+    def subscribe(self, observable):
+        observable.subscribe(self.keyChanged)
+
+    def keyChanged(self, key):
+        if key == Qt.Key_Escape:
+            self.app.quit()
 
 class TextListener():
     def __init__(self, taskRepository):
@@ -33,3 +44,14 @@ class TextListener():
         for token in self.tokens:
             if token.tokenType == tokenType:
                 yield token
+
+class Observable:
+    def __init__(self):
+        super().__init__()
+        self.subscriptions = []
+
+    def subscribe(self, fun):
+        self.subscriptions.append(fun)
+
+    def onChange(self, state):
+        [x(state) for x in self.subscriptions]

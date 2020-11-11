@@ -1,5 +1,5 @@
-from src.tasks.task_type import TaskType
-from src.db.dtos import TaskTypeDto
+from src.tasks import TaskType
+from src.db.dtos import TaskTypeDto, TaskDto
 
 class TaskRepository():
     def __init__(self, dbManager):
@@ -10,8 +10,8 @@ class TaskRepository():
 
         with self.dbManager.connect() as session: 
             taskTypeID = self._getTaskTypeID(taskString, session)
-            task = TaskDto(taskType=taskTypeID, text=task.name)
-            session.add(taskTypeDto)
+            task = TaskDto(taskType=taskTypeID, text=task.text)
+            session.add(task)
     
     def _getTaskTypeID(self, name, session):
         taskTypeDto = session.query(TaskTypeDto).filter_by(name=name).first()

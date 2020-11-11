@@ -1,8 +1,9 @@
-from src.parsing.states.text_token_type import TextTokenType
-from src.parsing.tokens.reminder_time_token import ReminderTimeToken
-from src.parsing.reminder_unit import ReminderUnit
-from src.parsing.token_text_position import TokenTextPosition
-from src.parsing.reminder_time import ReminderTime
+from enum import Enum
+from src.parsing.tokens import *
+
+class TextTokenType:
+    def match(self, text):
+        return TextToken(TokenTextPosition(0, len(text)), text)
 
 class ReminderTimeTokenType:
     @property
