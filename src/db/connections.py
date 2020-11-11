@@ -10,6 +10,7 @@ class DBOptions:
 class DBSession():
     def __init__(self, engine):
         self.session = sessionmaker(bind=engine)()
+        self.session.expire_on_commit = False
 
     def commit(self):
         self.session.commit()

@@ -20,6 +20,7 @@ class TaskTypeRepository():
     def getTaskType(self, taskType):
         taskString = self._taskTypeToString(taskType)
 
+        taskTypeDto = None
         with self.dbManager.connect() as session: 
             taskTypeDto = session.query(TaskTypeDto).filter_by(name=taskString).first()
 
@@ -28,7 +29,7 @@ class TaskTypeRepository():
                 session.add(taskTypeDto)
                 session.commit()
         
-            return taskTypeDto
+        return taskTypeDto
 
     def _taskTypeToString(self, taskType):
         if taskType == TaskType.TEXT:
