@@ -2,26 +2,33 @@ from src.tasks import TaskType
 from src.db.dtos import TaskTypeDto, TaskDto
 
 class TaskRepository():
+    def __init__(self, dbManager, taskTypeRepository):
+        self.dbManager = dbManager
+        self.taskTypeRepository = taskTypeRepository
+
+    def createTask(self, task):
+        taskType = self.taskTypeRepository.getTaskType(task.taskType)
+
+        with self.dbManager.connect() as session: 
+            task = TaskDto(taskType=taskType.id, text=task.text)
+            session.add(task)
+
+class TaskTypeRepository():
     def __init__(self, dbManager):
         self.dbManager = dbManager
 
-    def createTask(self, task):
-        taskString = self._taskTypeToString(task.taskType)
+    def getTaskType(self, taskType):
+        taskString = self._taskTypeToString(taskType)
 
         with self.dbManager.connect() as session: 
-            taskTypeID = self._getTaskTypeID(taskString, session)
-            task = TaskDto(taskType=taskTypeID, text=task.text)
-            session.add(task)
-    
-    def _getTaskTypeID(self, name, session):
-        taskTypeDto = session.query(TaskTypeDto).filter_by(name=name).first()
+            taskTypeDto = session.query(TaskTypeDto).filter_by(name=taskString).first()
 
-        if taskTypeDto == None:
-            taskTypeDto = TaskTypeDto(name=name)
-            session.add(taskTypeDto)
-            session.commit()
+            if taskTypeDto == None:
+                taskTypeDto = TaskTypeDto(name=taskString)
+                session.add(taskTypeDto)
+                session.commit()
         
-        return taskTypeDto.id
+            return taskTypeDto
 
     def _taskTypeToString(self, taskType):
         if taskType == TaskType.TEXT:
