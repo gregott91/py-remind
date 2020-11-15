@@ -43,3 +43,13 @@ class ReminderTime:
     def __init__(self, value, unit):
         self.value = value
         self.unit = unit
+
+class TokenRepository:
+    def __init__(self):
+        self.tokens = []
+
+    def setTokens(self, tokens):
+        self.tokens = tokens
+
+    def clearTokens(self):
+        self.tokens = []

@@ -62,7 +62,8 @@ class BorderlessWindow(QMainWindow):
         self.layout.addWidget(widget)
 
 class UIManager():
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.window = BorderlessWindow()
         self.editWidget = EditWidget()
 
@@ -80,3 +81,6 @@ class UIManager():
 
     def clearText(self):
         self.editWidget.clear()
+
+    def shutdown(self):
+        self.app.quit()

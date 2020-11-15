@@ -5,35 +5,32 @@ from src.tasks import TextTask
 from src.parsing.processing import saveTokens
 from enum import Enum
 
-class ExitListener():
-    def __init__(self, app):
-        self.app = app
+class KeypressListener():
+    def __init__(self, uiManager, tokenRepository, taskRepository):
+        self.uiManager = uiManager
+        self.tokenRepository = tokenRepository
+        self.taskRepository = taskRepository
     
     def subscribe(self, observable):
         observable.subscribe(self.keyChanged)
 
     def keyChanged(self, key):
         if key == Qt.Key_Escape:
-            self.app.quit()
+            self.uiManager.shutdown()
+        elif key in [Qt.Key_Enter, Qt.Key_Return]:
+            saveTokens(self.taskRepository, self.tokenRepository.tokens)
+            self.tokenRepository.clearTokens()
+            self.uiManager.clearText()
 
-class TextListener():
-    def __init__(self, taskRepository, uiManager):
-        self.taskRepository = taskRepository
-        self.uiManager = uiManager
+class TextEnteredListener():
+    def __init__(self, tokenRepository):
+        self.tokenRepository = tokenRepository
 
     def subscribe(self, observable):
-        if observable.observableType == ObservableType.KEYPRESS:
-            observable.subscribe(self.keyPressed)
-        elif observable.observableType == ObservableType.TEXTENTERED:
-            observable.subscribe(self.textEntered)
+        observable.subscribe(self.textEntered)
 
     def textEntered(self, text):
-        self.tokens = tokenize(text)
-
-    def keyPressed(self, key):
-        if key in [Qt.Key_Enter, Qt.Key_Return]:
-            saveTokens(self.taskRepository, self.tokens)
-            self.uiManager.clearText()
+        self.tokenRepository.setTokens(tokenize(text))
 
 
 class ObservableType(Enum):

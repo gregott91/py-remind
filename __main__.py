@@ -1,5 +1,4 @@
 import sys
-from src.listeners import ExitListener, TextListener
 from src.db.connections import DBManager, DBOptions
 from src.db.repositories import TaskRepository
 from src.ui import BorderlessWindow, EditWidget
@@ -10,9 +9,9 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLa
 
 app = QApplication([])
 
-uiManager = configureUI()
-listeners = configureListeners(app, uiManager)
-configureSubscriptions(uiManager.editWidget, listeners["exitListener"], listeners["textListener"])
+uiManager = configureUI(app)
+listeners = configureListeners(uiManager)
+configureSubscriptions(uiManager.editWidget, listeners["keypressListener"], listeners["textListener"])
 
 uiManager.window.show()
 
