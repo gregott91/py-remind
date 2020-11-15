@@ -10,10 +10,10 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLa
 
 app = QApplication([])
 
-listeners = configureListeners(app)
-ui = configureUI(app, listeners["exitListener"], listeners["textListener"])
-configureSubscriptions(ui["widget"], listeners["exitListener"], listeners["textListener"])
+uiManager = configureUI()
+listeners = configureListeners(app, uiManager)
+configureSubscriptions(uiManager.editWidget, listeners["exitListener"], listeners["textListener"])
 
-ui["window"].show()
+uiManager.window.show()
 
 sys.exit(app.exec_())
