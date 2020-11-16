@@ -21,6 +21,10 @@ class KeypressListener():
             saveTokens(self.taskRepository, self.tokenRepository.tokens)
             self.tokenRepository.clearTokens()
             self.uiManager.clearText()
+        elif key == Qt.Key_Down:
+            self.uiManager.showList()
+        elif key == Qt.Key_Up:
+            self.uiManager.hideList()
 
 class TextEnteredListener():
     def __init__(self, tokenRepository):

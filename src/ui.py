@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QMainWindow, QGridLayout, QDesktopWidget, QLineEdit
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMainWindow, QDesktopWidget, QLineEdit, QListWidget, QLayout
 from PyQt5.QtGui import QPalette, QColor, QFont
 from src.listeners import Observable, ObservableType
 
@@ -43,13 +43,17 @@ class BorderlessWindow(QMainWindow):
         self._configureLayout()
 
     def _configureLayout(self):
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        self.fakeWidget.setStyleSheet("height: 0px;")
         self.fakeWidget.setLayout(self.layout)
         self.setCentralWidget(self.fakeWidget)
 
     def center(self, width, height):
         self.setFixedWidth(width)
-        self.setFixedHeight(height)
-
+        self.setHeight(height)
+        
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
@@ -61,26 +65,47 @@ class BorderlessWindow(QMainWindow):
     def addWidget(self, widget):
         self.layout.addWidget(widget)
 
+    def setHeight(self, height):
+        self.setFixedHeight(height)
+
 class UIManager():
     def __init__(self, app):
         self.app = app
         self.window = BorderlessWindow()
         self.editWidget = EditWidget()
+        self.listWidget = QListWidget()
+        self.initialHeight = 60
 
     def initializeDefaultUI(self):
-        globalStyles = [{ "name": "background-color", "value": "rgb(12,12,12)" }]
-
-        self.window.center(800, 60)
-        self.window.configureStyles(globalStyles)
-
         self.editWidget.configureFont("Cascadia Mono", 14)
         self.editWidget.configureTextColor(204, 204, 204)
-        self.editWidget.configureStyles(globalStyles + [{ "name": "border", "value": "0" }])
+        self.editWidget.configureStyles([
+                { "name": "background-color", "value": "rgb(12,12,12)" },
+                { "name": "padding-left", "value": "8px" },
+                { "name": "padding-right", "value": "8px" },
+                { "name": "border", "value": "0" },
+                { "name": "height", "value": f"{self.initialHeight}px"}
+            ])
 
+        self.listWidget.hide()
+
+        self.window.center(800, self.initialHeight)
         self.window.addWidget(self.editWidget)
+        self.window.addWidget(self.listWidget)
 
     def clearText(self):
         self.editWidget.clear()
 
     def shutdown(self):
         self.app.quit()
+
+    def hideList(self):
+        self.window.setHeight(60)
+        self.listWidget.hide()
+
+    def showList(self):
+        self.window.setHeight(200)
+        self.listWidget.show()
+
+    def show(self):
+        self.window.show()

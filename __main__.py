@@ -13,6 +13,8 @@ uiManager = configureUI(app)
 listeners = configureListeners(uiManager)
 configureSubscriptions(uiManager.editWidget, listeners["keypressListener"], listeners["textListener"])
 
-uiManager.window.show()
+uiManager.show()
+
+hint = uiManager.editWidget.sizeHint()
 
 sys.exit(app.exec_())
