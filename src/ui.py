@@ -1,11 +1,11 @@
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMainWindow, QDesktopWidget, QLineEdit, QListWidget, QLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMainWindow, QDesktopWidget, QLineEdit, QListWidget, QTabWidget
 from PyQt5.QtGui import QPalette, QColor, QFont
 from src.listeners import Observable, ObservableType
 
 def setWidgetStyleSheet(widget, styles):
-    concatenated = "".join([f"{style['name']}:{style['value']};" for style in styles])
+    concatenated = "".join([f"{style[0]}:{style[1]};" for style in styles])
     widget.setStyleSheet(concatenated)
 
 class EditWidget(QLineEdit):
@@ -39,7 +39,6 @@ class BorderlessWindow(QMainWindow):
         self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.layout = QVBoxLayout()
         self.fakeWidget = QWidget()
-
         self._configureLayout()
 
     def _configureLayout(self):
@@ -68,30 +67,46 @@ class BorderlessWindow(QMainWindow):
     def setHeight(self, height):
         self.setFixedHeight(height)
 
+class TabWidget(QTabWidget):
+    def __init__(self):
+        super().__init__()
+        self._configureTabs()
+    
+    def _configureTabs(self):
+        self.todoListTab = QListWidget()
+        self.reminderTab = QListWidget()
+        
+        self.addTab(self.todoListTab,"To Dos")
+        self.addTab(self.reminderTab,"Reminders")
+        self.setStyleSheet("margin: 0")
+        self.tabBar().setStyleSheet("QTabBar::tab { width: 300px; height: 30px; }")
+        self.tabBar().setFont(QFont("Segoe UI", 14))
+
 class UIManager():
     def __init__(self, app):
         self.app = app
         self.window = BorderlessWindow()
         self.editWidget = EditWidget()
-        self.listWidget = QListWidget()
+        self.tabWidget = TabWidget()
         self.initialHeight = 60
+        self.expandedHeight = 300
 
     def initializeDefaultUI(self):
         self.editWidget.configureFont("Cascadia Mono", 14)
         self.editWidget.configureTextColor(204, 204, 204)
         self.editWidget.configureStyles([
-                { "name": "background-color", "value": "rgb(12,12,12)" },
-                { "name": "padding-left", "value": "8px" },
-                { "name": "padding-right", "value": "8px" },
-                { "name": "border", "value": "0" },
-                { "name": "height", "value": f"{self.initialHeight}px"}
+                [ "background-color", "rgb(12,12,12)" ],
+                [ "padding-left", "8px" ],
+                [ "padding-right", "8px" ],
+                [ "border", "0" ],
+                [ "height", f"{self.initialHeight}px" ]
             ])
 
-        self.listWidget.hide()
+        self.tabWidget.hide()
 
         self.window.center(800, self.initialHeight)
         self.window.addWidget(self.editWidget)
-        self.window.addWidget(self.listWidget)
+        self.window.addWidget(self.tabWidget)
 
     def clearText(self):
         self.editWidget.clear()
@@ -100,12 +115,12 @@ class UIManager():
         self.app.quit()
 
     def hideList(self):
-        self.window.setHeight(60)
-        self.listWidget.hide()
+        self.window.setHeight(self.initialHeight)
+        self.tabWidget.hide()
 
     def showList(self):
-        self.window.setHeight(200)
-        self.listWidget.show()
+        self.window.setHeight(self.expandedHeight)
+        self.tabWidget.show()
 
     def show(self):
         self.window.show()

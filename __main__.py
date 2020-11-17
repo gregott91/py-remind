@@ -15,6 +15,4 @@ configureSubscriptions(uiManager.editWidget, listeners["keypressListener"], list
 
 uiManager.show()
 
-hint = uiManager.editWidget.sizeHint()
-
 sys.exit(app.exec_())
